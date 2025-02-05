@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Reel scroller</string>
+    <string name="percentage_format">Reel scroller</string>
+    <string name="accessbility_desc">This permission is necessary for handling the instagram by this app</string>
+</resources>
