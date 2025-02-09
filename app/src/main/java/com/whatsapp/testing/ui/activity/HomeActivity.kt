@@ -4,7 +4,6 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
@@ -16,35 +15,31 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.iielse.switchbutton.SwitchView
+import androidx.viewpager2.widget.ViewPager2
+import com.whatsapp.testing.AppController.PreferenceManager
 import com.whatsapp.testing.R
+import com.whatsapp.testing.database.DailyStats
 import com.whatsapp.testing.database.StatsDatabase
 import com.whatsapp.testing.database.StatsRepository
 import com.whatsapp.testing.databinding.ActivityMainBinding
 import com.whatsapp.testing.service.AutoScrollService
-import com.whatsapp.testing.ui.activity.adapter.DailyStatsAdapter
+import com.whatsapp.testing.ui.activity.adapter.StatsChartPagerAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val ACCESSIBILITY_PERMISSION_REQUEST_CODE = 100
+    private lateinit var prefManager: PreferenceManager
     private lateinit var statsRepository: StatsRepository
-    private lateinit var statsAdapter: DailyStatsAdapter
     private var statsUpdateJob: Job? = null
     private var isInForeground = false
-
-    companion object {
-        private const val PREFS_NAME = "AutoScrollPrefs"
-        private const val KEY_SKIP_ADS = "skip_ads"
-        private const val KEY_SCROLL_INTERVAL = "scrollInterval"
-        private const val KEY_REEL_LIMIT = "reelLimit"
-        private const val KEY_SELECTED_APP = "selected_app"
-    }
+    private lateinit var statsChartPagerAdapter: StatsChartPagerAdapter
 
     private val apps = listOf(
         "Instagram Reels", "YouTube Shorts", "LinkedIn Videos", "Snapchat Stories"
@@ -54,109 +49,125 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        prefManager = PreferenceManager(this)
 
-        setGreenStatusBar()
-        setupAppSelector()
-        loadSavedSettings()
-        setupRecyclerView()
+        initializeViews()
         initializeDatabase()
         startStatsUpdates()
+    }
+
+    private fun initializeViews() {
+        setupStatusBar()
+        setupAppSelector()
+        loadSavedSettings()
+        setupChartViewPager()
         setupClickListeners()
         setupAutoSave()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (!isInForeground) {
-            isInForeground = true
-            lifecycleScope.launch {
-                updateStatsDisplay()
-            }
-        }
+    private fun setupStatusBar() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = ContextCompat.getColor(this, android.R.color.transparent)
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
+        binding.root.setPadding(0, getStatusBarHeight(), 0, 0)
     }
 
-    override fun onPause() {
-        super.onPause()
-        isInForeground = false
-//        statsUpdateJob?.cancel()
+    private fun setupChartViewPager() {
+        statsChartPagerAdapter = StatsChartPagerAdapter(this)
+        binding.statsViewPager.apply {
+            adapter = statsChartPagerAdapter
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+            // Add offscreen page limit to keep adjacent pages ready
+            offscreenPageLimit = 1
+
+            // Add page transform animation
+            setPageTransformer { page, position ->
+                page.apply {
+                    val pageWidth = width
+                    when {
+                        position < -1 -> { // Page is way off-screen to the left
+                            alpha = 0f
+                        }
+
+                        position <= 1 -> { // Page is visible or adjacent
+                            // Base scaling and alpha
+                            alpha = 1 - abs(position)
+                            scaleY = 0.85f + (1 - abs(position)) * 0.15f
+
+                            // Add slight translation for smooth transition
+                            translationX = -position * (pageWidth / 4)
+                        }
+
+                        else -> { // Page is way off-screen to the right
+                            alpha = 0f
+                        }
+                    }
+                }
+            }
+        }
+
+        // Connect dots indicator
+        binding.dotsIndicator.attachTo(binding.statsViewPager)
     }
 
     private fun setupAutoSave() {
-        binding.editTextInterval.addTextChangedListener(object : TextWatcher {
+        val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 saveSettings()
             }
-        })
+        }
 
-        binding.editTextReelLimit.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                saveSettings()
-            }
-        })
+        binding.editTextInterval.addTextChangedListener(textWatcher)
+        binding.editTextReelLimit.addTextChangedListener(textWatcher)
     }
 
     private fun setupClickListeners() {
-
-        binding.btnStartService.setOnClickListener {
-            if (isAccessibilityServiceEnabled()) {
-                startService()
-            } else {
-                requestAccessibilityPermission()
-            }
-        }
-        binding.settingBtn.setOnClickListener {
-            startActivity(Intent(this@HomeActivity, StatsActivity::class.java))
-        }
-
-        binding.btnStopService.setOnClickListener {
-            stopService()
-        }
-
-        binding.skipAdsSwitch.setOnStateChangedListener(object : SwitchView.OnStateChangedListener {
-            override fun toggleToOn(view: SwitchView) {
-                savePreference(KEY_SKIP_ADS, true)
+        with(binding) {
+            btnStartService.setOnClickListener {
+                if (isAccessibilityServiceEnabled()) startService()
+                else requestAccessibilityPermission()
             }
 
-            override fun toggleToOff(view: SwitchView) {
-                savePreference(KEY_SKIP_ADS, false)
+            fullGraph.setOnClickListener {
+                startActivity(Intent(this@HomeActivity, StatsActivity::class.java))
             }
-        })
+
+            settingBtn.setOnClickListener {
+                startActivity(Intent(this@HomeActivity, SettingsActivity::class.java))
+            }
+
+            btnStopService.setOnClickListener { stopService() }
+
+//            skipAdsSwitch.setOnStateChangedListener(object : SwitchView.OnStateChangedListener {
+//                override fun toggleToOn(view: SwitchView) =
+//                    prefManager.saveSkipAds(true)
+//                override fun toggleToOff(view: SwitchView) =
+//                    prefManager.saveSkipAds(false)
+//            })
+        }
     }
 
     private fun setupAppSelector() {
         val adapter = ArrayAdapter(this, R.layout.dropdown_item, apps)
-        binding.appSelector.setAdapter(adapter)
-
-        val savedApp =
-            getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getString(KEY_SELECTED_APP, null)
-        if (!savedApp.isNullOrEmpty()) {
-            binding.appSelector.setText(savedApp, false)
-        }
-
-        binding.appSelector.setOnItemClickListener { _, _, position, _ ->
-            val selectedApp = apps[position]
-            savePreference(KEY_SELECTED_APP, selectedApp)
-
+        binding.appSelector.apply {
+            setAdapter(adapter)
+            prefManager.getSelectedApp()?.let { savedApp ->
+                if (savedApp.isNotEmpty()) setText(savedApp, false)
+            }
+            setOnItemClickListener { _, _, position, _ ->
+                prefManager.saveSelectedApp(apps[position])
+            }
         }
     }
 
     private fun loadSavedSettings() {
-        val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        binding.editTextInterval.setText(sharedPrefs.getLong(KEY_SCROLL_INTERVAL, 5).toString())
-        binding.editTextReelLimit.setText(sharedPrefs.getLong(KEY_REEL_LIMIT, 50).toString())
-        binding.skipAdsSwitch.setOpened(sharedPrefs.getBoolean(KEY_SKIP_ADS, false))
-    }
-
-    private fun setGreenStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.apply {
-                statusBarColor = ContextCompat.getColor(this@HomeActivity, R.color.teal_700)
-                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
+        with(binding) {
+            editTextInterval.setText(prefManager.getScrollInterval().toString())
+            editTextReelLimit.setText(prefManager.getReelLimit().toString())
+            skipAdsSwitch.setOpened(prefManager.getSkipAds())
         }
     }
 
@@ -166,61 +177,67 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun startStatsUpdates() {
-        lifecycleScope.launch {
-            updateStatsDisplay()
-        }
+        lifecycleScope.launch { updateStatsDisplay() }
     }
 
-    suspend fun updateStatsDisplay() = withContext(Dispatchers.IO) {
+    private suspend fun updateStatsDisplay() = withContext(Dispatchers.IO) {
         try {
             val allStats = statsRepository.getAllStatsOrderedByDate()
             val todayStats = statsRepository.getTodayStats()
-            val reelLimit =
-                getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getLong(KEY_REEL_LIMIT, 50)
+            val reelLimit = prefManager.getReelLimit()
             val selectedApp = binding.appSelector.text.toString()
 
-            val totalWatched = when (selectedApp) {
-                "Instagram Reels" -> todayStats.instagramReelsWatched
-                "YouTube Shorts" -> todayStats.youtubeReelsWatched
-                "LinkedIn Videos" -> todayStats.linkedInVideosWatched
-                "Snapchat Stories" -> todayStats.snapchatStoriesWatched
-                else -> 0
-            }
-
+            val totalWatched = getTotalWatchedForApp(selectedApp, todayStats)
             val remainingContent = reelLimit - totalWatched
-            val contentType = when (selectedApp) {
-                "Instagram Reels" -> "reels"
-                "YouTube Shorts" -> "shorts"
-                "LinkedIn Videos" -> "videos"
-                "Snapchat Stories" -> "stories"
-                else -> "content"
-            }
+            val contentType = getContentType(selectedApp)
 
             withContext(Dispatchers.Main) {
-                statsAdapter.submitList(allStats)
+                // Check if we have any stats
+                if (allStats.isEmpty()) {
+                    // Show empty state
+                    binding.emptyState.root.visibility = View.VISIBLE
+                    binding.statsViewPager.visibility = View.GONE
+                    binding.statsHeading.visibility = View.GONE
+                    binding.fullGraph.visibility = View.GONE
+                    binding.dotsIndicator.visibility = View.GONE
+                } else {
+                    // Show stats
+                    binding.emptyState.root.visibility = View.GONE
+                    binding.statsHeading.visibility = View.VISIBLE
+                    binding.fullGraph.visibility = View.VISIBLE
+                    binding.statsViewPager.visibility = View.VISIBLE
+                    binding.dotsIndicator.visibility = View.VISIBLE
+                    statsChartPagerAdapter.updateAllFragmentsStats(allStats)
+                }
+
                 binding.remainingReelsText.text = "Remaining $contentType: $remainingContent"
                 binding.btnStartService.isEnabled = remainingContent > 0
             }
         } catch (e: Exception) {
-            Log.e("MainActivity", "Error in updateStatsDisplay: ${e.stackTraceToString()}")
+            Log.e("HomeActivity", "Error in updateStatsDisplay: ${e.message}")
         }
     }
 
-    private fun setupRecyclerView() {
-        statsAdapter = DailyStatsAdapter()
-        binding.statsRecyclerView.apply {
-            adapter = statsAdapter
-            layoutManager = LinearLayoutManager(
-                this@HomeActivity, LinearLayoutManager.HORIZONTAL, false
-            )
+    private fun getTotalWatchedForApp(selectedApp: String, todayStats: DailyStats) =
+        when (selectedApp) {
+            "Instagram Reels" -> todayStats.instagramReelsWatched
+            "YouTube Shorts" -> todayStats.youtubeReelsWatched
+            "LinkedIn Videos" -> todayStats.linkedInVideosWatched
+            "Snapchat Stories" -> todayStats.snapchatStoriesWatched
+            else -> 0
         }
+
+    private fun getContentType(selectedApp: String) = when (selectedApp) {
+        "Instagram Reels" -> "reels"
+        "YouTube Shorts" -> "shorts"
+        "LinkedIn Videos" -> "videos"
+        "Snapchat Stories" -> "stories"
+        else -> "content"
     }
 
     private fun saveSettings() {
-        val intervalText = binding.editTextInterval.text.toString()
-        val reelLimitText = binding.editTextReelLimit.text.toString()
-        val interval = intervalText.toLongOrNull()
-        val reelLimit = reelLimitText.toLongOrNull()
+        val interval = binding.editTextInterval.text.toString().toLongOrNull()
+        val reelLimit = binding.editTextReelLimit.text.toString().toLongOrNull()
 
         when {
             interval == null || interval < 3 -> {
@@ -232,18 +249,15 @@ class HomeActivity : AppCompatActivity() {
                 showToast("Reel limit must be between 5 and 5,000")
                 return
             }
-        }
 
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().apply {
-            if (interval != null) {
-                putLong(KEY_SCROLL_INTERVAL, interval)
+            else -> {
+                prefManager.apply {
+                    saveScrollInterval(interval)
+                    saveReelLimit(reelLimit)
+                }
+                showToast("Settings saved successfully")
             }
-            if (reelLimit != null) {
-                putLong(KEY_REEL_LIMIT, reelLimit)
-            }
-            apply()
         }
-        showToast("Settings saved successfully")
     }
 
     private fun startService() {
@@ -251,10 +265,10 @@ class HomeActivity : AppCompatActivity() {
 
         if (isAccessibilityServiceEnabled()) {
             when (binding.appSelector.text.toString()) {
-                "Instagram Reels" -> openInstagramForScrolling()
-                "YouTube Shorts" -> openYoutubeForScrolling()
-                "Snapchat Stories" -> openSnapchatForScrolling()
-                "LinkedIn Videos" -> openLinkedInForScrolling()
+                "Instagram Reels" -> openApp("com.instagram.android", "Instagram")
+                "YouTube Shorts" -> openApp("com.google.android.youtube", "YouTube")
+                "Snapchat Stories" -> openApp("com.snapchat.android", "Snapchat")
+                "LinkedIn Videos" -> openApp("com.linkedin.android", "LinkedIn")
             }
         } else {
             requestAccessibilityPermission()
@@ -263,36 +277,16 @@ class HomeActivity : AppCompatActivity() {
 
     private fun validateAppSelection(): Boolean {
         val selectedApp = binding.appSelector.text.toString()
-        if (selectedApp.isEmpty() || selectedApp !in apps) {
+        return if (selectedApp.isEmpty() || selectedApp !in apps) {
             showToast("Please select an app")
-            return false
-        }
-        return true
-    }
-
-    private fun openLinkedInForScrolling() {
-        openApp("com.linkedin.android", "LinkedIn")
-    }
-
-    private fun openSnapchatForScrolling() {
-        openApp("com.snapchat.android", "Snapchat")
-    }
-
-    private fun openYoutubeForScrolling() {
-        openApp("com.google.android.youtube", "YouTube")
-    }
-
-    private fun openInstagramForScrolling() {
-        openApp("com.instagram.android", "Instagram")
+            false
+        } else true
     }
 
     private fun openApp(packageName: String, appName: String) {
-        val intent = packageManager.getLaunchIntentForPackage(packageName)
-        if (intent != null) {
-            startActivity(intent)
-        } else {
-            showToast("$appName app not found")
-        }
+        packageManager.getLaunchIntentForPackage(packageName)?.let {
+            startActivity(it)
+        } ?: showToast("$appName app not found")
     }
 
     private fun isAccessibilityServiceEnabled(): Boolean {
@@ -301,7 +295,6 @@ class HomeActivity : AppCompatActivity() {
         val enabledServices = accessibilityManager.getEnabledAccessibilityServiceList(
             AccessibilityServiceInfo.FEEDBACK_ALL_MASK
         )
-        // Use component name for exact matching
         val serviceComponentName = ComponentName(packageName, AutoScrollService::class.java.name)
         return enabledServices.any {
             ComponentName.unflattenFromString(it.id)?.equals(serviceComponentName) ?: false
@@ -309,16 +302,38 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun requestAccessibilityPermission() {
-        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-        startActivityForResult(intent, ACCESSIBILITY_PERMISSION_REQUEST_CODE)
+        startActivityForResult(
+            Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS),
+            100
+        )
     }
 
     private fun stopService() {
-        val autoScrollService = AutoScrollService.getCurrentInstance()
-        autoScrollService?.stopScrollService()
-        val intent = Intent(this, AutoScrollService::class.java)
-        stopService(intent)
-        AutoScrollService.instance = null  // Force clear the instance
+        AutoScrollService.getCurrentInstance()?.stopScrollService()
+        stopService(Intent(this, AutoScrollService::class.java))
+        AutoScrollService.instance = null
+    }
+
+    private fun getStatusBarHeight(): Int {
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isInForeground) {
+            isInForeground = true
+            lifecycleScope.launch { updateStatsDisplay() }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isInForeground = false
     }
 
     override fun onDestroy() {
@@ -326,17 +341,4 @@ class HomeActivity : AppCompatActivity() {
         stopService()
         statsUpdateJob?.cancel()
     }
-
-    private fun savePreference(key: String, value: String) {
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putString(key, value).apply()
-    }
-
-    private fun savePreference(key: String, value: Boolean) {
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(key, value).apply()
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
 }

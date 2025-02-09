@@ -3,58 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="#F8F9FA">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/chat_toolbar"
+    <!-- Top Bar -->
+    <RelativeLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="1dp"
-        android:stateListAnimator="@null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:text="Your"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:text="Space"
+            android:textColor="#FF8959"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/settingBtn"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_alignParentEnd="true"
-            android:background="@color/white"
-            android:paddingBottom="8dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:paddingEnd="10dp">
-
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
-                    android:text="Reel scroller"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/settingBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_advertisement"
-                    android:visibility="visible" />
-
-            </RelativeLayout>
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_setting" />
+    </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -62,219 +45,272 @@
         android:clipToPadding="false"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chat_toolbar">
+        app:layout_constraintTop_toBottomOf="@id/topBar">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mainSettingsCard"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <!-- Settings Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_alignParentTop="true"
+                android:layout_margin="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginBottom="16dp"
-                        android:text="Basic Settings"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/remainingReelsText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="8dp"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:hint="Scroll Interval (seconds)"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_time">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextInterval"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:maxLength="4" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:hint="Reel Limit "
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_time">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextReelLimit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:maxLength="4" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="Advanced Settings"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <!-- Replace the switch container with this dropdown -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:hint="Select App"
-                    app:startIconDrawable="@drawable/ic_time">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/appSelector"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="none" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Keep the Skip Ads switch -->
-                <RelativeLayout
-                    android:id="@+id/skipAdsContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:id="@+id/skipAdsIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/ic_advertisement" />
-
-                    <TextView
-                        android:id="@+id/skipAdsLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/skipAdsIcon"
-                        android:text="Skip Ads"
-                        android:textSize="16sp" />
-
-                    <com.github.iielse.switchbutton.SwitchView
-                        android:id="@+id/skipAdsSwitch"
-                        android:layout_width="50dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:padding="4dp" />
-                </RelativeLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSaveInterval"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:visibility="gone"
-                    android:layout_marginBottom="16dp"
-                    android:backgroundTint="@color/teal_700"
-                    android:text="Save Settings"
-                    app:cornerRadius="8dp" />
-
-                <!-- Statistics Section -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="Statistics"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/statsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:clipToPadding="false"
-                    />
-
-                <!-- Control Buttons -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:orientation="vertical"
+                    android:padding="24dp">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnStopService"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                        android:layout_width="0dp"
-                        android:layout_height="56dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/teal_700"
-                        android:text="Stop"
-                        android:textColor="@color/white"
-                        app:cornerRadius="8dp"
-                        app:icon="@drawable/pause_1010_svgrepo_com"
-                        app:iconGravity="textStart"
-                        app:iconTint="@color/white"
-                        app:strokeColor="@color/black" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Basic Settings"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/remainingReelsText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:textColor="#757575"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:hint="Scroll Interval (seconds)"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:startIconDrawable="@drawable/ic_time">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextInterval"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="4" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:hint="Reel Limit"
+                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:startIconDrawable="@drawable/ic_time">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextReelLimit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="4" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Select App"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:startIconDrawable="@drawable/ic_time">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/appSelector"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Skip Ads Switch -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/skipAdsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="#F8F9FA"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:id="@+id/skipAdsIcon"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_advertisement" />
+
+                            <TextView
+                                android:id="@+id/skipAdsLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toEndOf="@id/skipAdsIcon"
+                                android:text="Skip Ads"
+                                android:textColor="#000000"
+                                android:textSize="16sp" />
+
+                            <com.github.iielse.switchbutton.SwitchView
+                                android:id="@+id/skipAdsSwitch"
+                                android:layout_width="50dp"
+                                android:layout_height="40dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true" />
+                        </RelativeLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnStopService"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_marginEnd="16dp"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="0dp"
+                            app:backgroundTint="#FF4B6C"
+                            app:cornerRadius="28dp"
+                            app:icon="@drawable/pause_1010_svgrepo_com"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0dp"
+                            app:iconSize="24dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnStartService"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_marginEnd="16dp"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="0dp"
+                            app:backgroundTint="#FFB344"
+                            app:cornerRadius="28dp"
+                            app:icon="@drawable/play_svgrepo_com"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0dp"
+                            app:iconSize="24dp" />
+
+                    </LinearLayout>
+                    <!-- Save Button -->
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnStartService"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
+                        android:id="@+id/btnSaveInterval"
+                        android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_weight="1"
+                        android:layout_marginBottom="16dp"
                         android:backgroundTint="@color/teal_700"
-                        android:text="Start"
-                        android:textColor="@color/white"
-                        app:cornerRadius="8dp"
-                        app:icon="@drawable/play_svgrepo_com"
-                        app:iconGravity="textStart"
-                        app:iconTint="@color/white" />
+                        android:text="Save Settings"
+                        android:visibility="gone"
+                        app:cornerRadius="12dp" />
+
+                    <!-- Statistics Section -->
 
                 </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <include
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/emptyState"
+                android:layout_below="@id/mcv"
+                layout="@layout/layout_empty_state"/>
 
-        </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/statsHeading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mcv"
+                android:layout_marginStart="32dp"
+                android:text="Statistics"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+            <ImageView
+                android:id="@+id/fullGraph"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_below="@id/mcv"
+                android:background="@drawable/gradient_button_background"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:tint="@color/white"
+                android:src="@drawable/arrow_right" />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/statsViewPager"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/statsHeading"
+                android:layout_above="@id/dots_indicator"
+                android:layout_marginBottom="5dp"
+                android:background="#F8F9FA"
+                android:padding="16dp" />
+
+            <!-- Add this right after your ViewPager2 in the layout -->
+            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                android:id="@+id/dots_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                app:dotsColor="#FFB344"
+                app:dotsCornerRadius="8dp"
+                app:dotsSize="8dp"
+                app:dotsSpacing="4dp"
+                app:dotsWidthFactor="2.5"
+                app:selectedDotColor="#FF4B6C"
+                app:progressMode="false"/>
+
+        </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

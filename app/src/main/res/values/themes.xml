@@ -2,15 +2,57 @@
     <!-- Base application theme. -->
     <style name="Theme.Testing" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorPrimary">@color/gradient_start</item>
+        <item name="colorPrimaryVariant">@color/gradient_start_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color -->
-        <item name="colorSecondary">@color/secondary</item>
-        <item name="colorSecondaryVariant">@color/secondary_dark</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/gradient_end</item>
+        <item name="colorSecondaryVariant">@color/gradient_end_dark</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/gradient_end</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="android:textColorHint">@color/surface_overlay</item>
+        <item name="hintTextColor">@color/gradient_end</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="boxBackgroundColor">@color/surface_overlay</item>
+    </style>
+
+    <style name="CustomSpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:popupBackground">@color/surface_overlay</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:dropDownSelector">@color/gradient_start</item>
+    </style>
+    <style name="DotsIndicatorStyle">
+        <item name="dotsColor">@color/gradient_start</item>
+        <item name="dotsSize">8dp</item>
+        <item name="dotsSpacing">4dp</item>
+        <item name="dotsWidthFactor">2.5</item>
+        <item name="selectedDotColor">@color/gradient_end</item>
+    </style>
+    <!-- Additional styles for consistency -->
+    <style name="CustomCardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/surface_overlay</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/surface_overlay</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="CustomButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/gradient_start</item>
+        <item name="cornerRadius">12dp</item>
     </style>
 </resources>

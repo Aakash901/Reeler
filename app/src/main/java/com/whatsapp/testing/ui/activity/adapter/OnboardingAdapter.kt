@@ -1,6 +1,7 @@
 package com.whatsapp.testing.ui.activity.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.whatsapp.testing.databinding.ItemOnboardingBinding
@@ -26,11 +27,7 @@ class OnboardingAdapter(private val items: List<OnboardingItem>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: OnboardingItem) {
-            binding.apply {
-                imageView.setImageResource(item.image)
-                titleText.text = item.title
-                descriptionText.text = item.description
-            }
+            binding.imageView.setImageResource(item.image)
         }
     }
 }

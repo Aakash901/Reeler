@@ -41,4 +41,17 @@
     <color name="grey">#FFEEEEEE</color>
     <color name="darkerGrey">#FF666666</color>
     <color name="colorPrimary">#FF000000</color>
+
+    ///////////////////
+    <color name="gradient_start">#FF4B6C</color>  <!-- Redish pink -->
+    <color name="gradient_end">#FFB344</color>    <!-- Yellowish orange -->
+
+    <!-- Gradient variations for different states -->
+    <color name="gradient_start_dark">#D93D59</color>
+    <color name="gradient_end_dark">#E69B2F</color>
+
+    <!-- Background overlay -->
+    <color name="surface_overlay">#1AFFFFFF</color>
+    <color name="text_light_black">#757575</color>
+
 </resources>

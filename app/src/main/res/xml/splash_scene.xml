@@ -3,38 +3,51 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
+        motion:autoTransition="animateToEnd"
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@+id/start"
-        motion:duration="30"
-        motion:autoTransition="animateToEnd">
+        motion:duration="2000">
 
         <KeyFrameSet>
             <KeyAttribute
-                motion:motionTarget="@+id/appLogo"
-                motion:framePosition="0"
                 android:scaleX="0.0"
-                android:scaleY="0.0" />
-            <KeyAttribute
-                motion:motionTarget="@+id/appLogo"
-                motion:framePosition="50"
-                android:scaleX="1.2"
-                android:scaleY="1.2" />
-            <KeyAttribute
-                motion:motionTarget="@+id/appName"
+                android:scaleY="0.0"
                 motion:framePosition="0"
-                android:alpha="0" />
+                motion:motionTarget="@+id/appLogo" />
             <KeyAttribute
-                motion:motionTarget="@+id/appName"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                motion:framePosition="50"
+                motion:motionTarget="@+id/appLogo" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="0"
+                motion:motionTarget="@+id/appName" />
+            <KeyAttribute
+                android:alpha="1"
                 motion:framePosition="70"
-                android:alpha="1" />
+                motion:motionTarget="@+id/appName" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="0"
+                motion:motionTarget="@+id/shimmerOverlay" />
+            <KeyAttribute
+                android:alpha="0.3"
+                motion:framePosition="50"
+                motion:motionTarget="@+id/shimmerOverlay" />
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="100"
+                motion:motionTarget="@+id/shimmerOverlay" />
+
         </KeyFrameSet>
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
             android:id="@+id/backgroundLayout"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleX="0"
             android:scaleY="0"
             motion:layout_constraintBottom_toBottomOf="parent"
@@ -44,8 +57,8 @@
 
         <Constraint
             android:id="@+id/appLogo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
@@ -66,8 +79,8 @@
     <ConstraintSet android:id="@+id/end">
         <Constraint
             android:id="@+id/backgroundLayout"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleX="4"
             android:scaleY="4"
             motion:layout_constraintBottom_toBottomOf="parent"
@@ -77,8 +90,8 @@
 
         <Constraint
             android:id="@+id/appLogo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:scaleX="1.0"
             android:scaleY="1.0"
             motion:layout_constraintBottom_toBottomOf="parent"

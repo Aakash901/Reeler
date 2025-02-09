@@ -203,13 +203,13 @@ class StatsActivity : AppCompatActivity() {
                 axisLineWidth = 1f
                 textSize = 10f
                 labelRotationAngle = -45f
-                valueFormatter = IAxisValueFormatter { value, _ ->
-                    when (selectedTimeFilter) {
-                        TimeFilter.DAILY -> getDayLabel(value.toInt())
-                        TimeFilter.WEEKLY -> getWeekLabel(value.toInt())
-                        TimeFilter.MONTHLY -> getMonthLabel(value.toInt())
-                    }
-                }
+//                valueFormatter = IAxisValueFormatter { value, _ ->
+//                    when (selectedTimeFilter) {
+//                        TimeFilter.DAILY -> getDayLabel(value.toInt())
+//                        TimeFilter.WEEKLY -> getWeekLabel(value.toInt())
+//                        TimeFilter.MONTHLY -> getMonthLabel(value.toInt())
+//                    }
+//                }
             }
 
             // Y-Axis styling
@@ -481,9 +481,9 @@ class StatsActivity : AppCompatActivity() {
             setDrawValues(false)
             valueTextSize = 12f
             valueTextColor = getColor(R.color.colorPrimary)
-            valueFormatter = IValueFormatter { value, _, _, _ ->
-                value.toInt().toString()
-            }
+//            valueFormatter = IValueFormatter { value, _, _, _ ->
+//                value.toInt().toString()
+//            }
         }
 
         lineChart.apply {

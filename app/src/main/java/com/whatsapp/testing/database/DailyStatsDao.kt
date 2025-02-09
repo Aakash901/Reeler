@@ -11,6 +11,19 @@ interface DailyStatsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(stats: DailyStats)
 
+    @Query("SELECT * FROM daily_stats WHERE date = :today ORDER BY date DESC")
+    suspend fun getTodayStats(today: String): List<DailyStats>
+
+    @Query("SELECT * FROM daily_stats WHERE date BETWEEN :weekStart AND :weekEnd ORDER BY date DESC")
+    suspend fun getCurrentWeekStats(weekStart: String, weekEnd: String): List<DailyStats>
+
+    @Query("SELECT * FROM daily_stats WHERE strftime('%Y-%m', date) = :yearMonth ORDER BY date DESC")
+    suspend fun getCurrentMonthStats(yearMonth: String): List<DailyStats>
+
+    @Query("SELECT * FROM daily_stats WHERE strftime('%Y', date) = :year ORDER BY date DESC")
+    suspend fun getCurrentYearStats(year: String): List<DailyStats>
+
+
     @Update
     suspend fun update(stats: DailyStats)
 
