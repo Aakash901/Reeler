@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FA">
+    android:background="@color/home_background">
 
     <!-- Top Bar -->
     <RelativeLayout
@@ -17,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your"
-            android:textColor="@color/black"
+            android:textColor="@color/home_text_primary"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -26,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
             android:text="Space"
-            android:textColor="#FF8959"
+            android:textColor="@color/home_text_accent"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -36,7 +37,8 @@
             android:layout_height="28dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_setting" />
+            android:src="@drawable/ic_setting"
+            app:tint="@color/home_text_primary" />
     </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -60,7 +62,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_margin="16dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/home_card_background"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="2dp">
 
@@ -79,7 +81,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Basic Settings"
-                            android:textColor="@color/black"
+                            android:textColor="@color/home_text_primary"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -89,7 +91,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:textColor="#757575"
+                            android:textColor="@color/home_text_secondary"
                             android:textSize="14sp" />
                     </RelativeLayout>
 
@@ -99,19 +101,21 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:hint="Scroll Interval (seconds)"
-                        app:boxBackgroundColor="@color/white"
+                        app:boxBackgroundColor="@color/home_input_background"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusTopEnd="12dp"
                         app:boxCornerRadiusTopStart="12dp"
-                        app:startIconDrawable="@drawable/ic_time">
+                        app:startIconDrawable="@drawable/ic_time"
+                        app:startIconTint="@color/home_text_secondary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextInterval"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
-                            android:maxLength="4" />
+                            android:maxLength="4"
+                            android:textColor="@color/home_text_primary" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -120,19 +124,21 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:hint="Reel Limit"
-                        app:boxBackgroundColor="#FFFFFF"
+                        app:boxBackgroundColor="@color/home_input_background"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusTopEnd="12dp"
                         app:boxCornerRadiusTopStart="12dp"
-                        app:startIconDrawable="@drawable/ic_time">
+                        app:startIconDrawable="@drawable/ic_time"
+                        app:startIconTint="@color/home_text_secondary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextReelLimit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
-                            android:maxLength="4" />
+                            android:maxLength="4"
+                            android:textColor="@color/home_text_primary" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -140,18 +146,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Select App"
-                        app:boxBackgroundColor="@color/white"
+                        app:boxBackgroundColor="@color/home_input_background"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusTopEnd="12dp"
                         app:boxCornerRadiusTopStart="12dp"
-                        app:startIconDrawable="@drawable/ic_time">
+                        app:startIconDrawable="@drawable/ic_time"
+                        app:startIconTint="@color/home_text_secondary">
 
                         <AutoCompleteTextView
                             android:id="@+id/appSelector"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none" />
+                            android:inputType="none"
+                            android:textColor="@color/home_text_primary" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Skip Ads Switch -->
@@ -160,7 +168,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#F8F9FA"
+                        app:cardBackgroundColor="@color/home_card_secondary_bg"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp">
 
@@ -177,7 +185,8 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginEnd="12dp"
-                                android:src="@drawable/ic_advertisement" />
+                                android:src="@drawable/ic_advertisement"
+                                app:tint="@color/home_text_primary" />
 
                             <TextView
                                 android:id="@+id/skipAdsLabel"
@@ -186,7 +195,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_toEndOf="@id/skipAdsIcon"
                                 android:text="Skip Ads"
-                                android:textColor="#000000"
+                                android:textColor="@color/home_text_primary"
                                 android:textSize="16sp" />
 
                             <com.github.iielse.switchbutton.SwitchView
@@ -204,7 +213,6 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
-
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnStopService"
                             android:layout_width="56dp"
@@ -215,12 +223,13 @@
                             android:insetRight="0dp"
                             android:insetBottom="0dp"
                             android:padding="0dp"
-                            app:backgroundTint="#FF4B6C"
+                            app:backgroundTint="@color/home_button_stop"
                             app:cornerRadius="28dp"
                             app:icon="@drawable/pause_1010_svgrepo_com"
                             app:iconGravity="textStart"
                             app:iconPadding="0dp"
-                            app:iconSize="24dp" />
+                            app:iconSize="24dp"
+                            app:iconTint="@color/white" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnStartService"
@@ -232,35 +241,24 @@
                             android:insetRight="0dp"
                             android:insetBottom="0dp"
                             android:padding="0dp"
-                            app:backgroundTint="#FFB344"
+                            app:backgroundTint="@color/home_button_start"
                             app:cornerRadius="28dp"
                             app:icon="@drawable/play_svgrepo_com"
                             app:iconGravity="textStart"
                             app:iconPadding="0dp"
-                            app:iconSize="24dp" />
+                            app:iconSize="24dp"
+                            app:iconTint="@color/white" />
 
                     </LinearLayout>
-                    <!-- Save Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSaveInterval"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="16dp"
-                        android:backgroundTint="@color/teal_700"
-                        android:text="Save Settings"
-                        android:visibility="gone"
-                        app:cornerRadius="12dp" />
-
-                    <!-- Statistics Section -->
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+
             <include
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
+                layout="@layout/layout_empty_state"
                 android:id="@+id/emptyState"
-                android:layout_below="@id/mcv"
-                layout="@layout/layout_empty_state"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/statsHeading"
@@ -269,33 +267,32 @@
                 android:layout_below="@id/mcv"
                 android:layout_marginStart="32dp"
                 android:text="Statistics"
-                android:textColor="@color/black"
+                android:textColor="@color/home_text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
 
             <ImageView
                 android:id="@+id/fullGraph"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_below="@id/mcv"
-                android:background="@drawable/gradient_button_background"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="16dp"
+                android:background="@drawable/gradient_button_background"
+                android:src="@drawable/arrow_right"
                 android:tint="@color/white"
-                android:src="@drawable/arrow_right" />
+                android:visibility="gone" />
+
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/statsViewPager"
-                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/statsHeading"
                 android:layout_above="@id/dots_indicator"
+                android:layout_below="@id/statsHeading"
                 android:layout_marginBottom="5dp"
-                android:background="#F8F9FA"
+                android:background="@color/home_background"
                 android:padding="16dp" />
 
-            <!-- Add this right after your ViewPager2 in the layout -->
             <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
                 android:id="@+id/dots_indicator"
                 android:layout_width="wrap_content"
@@ -303,13 +300,13 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="16dp"
-                app:dotsColor="#FFB344"
+                app:dotsColor="@color/home_dots_unselected"
                 app:dotsCornerRadius="8dp"
                 app:dotsSize="8dp"
                 app:dotsSpacing="4dp"
                 app:dotsWidthFactor="2.5"
-                app:selectedDotColor="#FF4B6C"
-                app:progressMode="false"/>
+                app:progressMode="false"
+                app:selectedDotColor="@color/home_dots_selected" />
 
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

@@ -203,13 +203,13 @@ class StatsActivity : AppCompatActivity() {
                 axisLineWidth = 1f
                 textSize = 10f
                 labelRotationAngle = -45f
-//                valueFormatter = IAxisValueFormatter { value, _ ->
-//                    when (selectedTimeFilter) {
-//                        TimeFilter.DAILY -> getDayLabel(value.toInt())
-//                        TimeFilter.WEEKLY -> getWeekLabel(value.toInt())
-//                        TimeFilter.MONTHLY -> getMonthLabel(value.toInt())
-//                    }
-//                }
+                valueFormatter = IAxisValueFormatter { value, _ ->
+                    when (selectedTimeFilter) {
+                        TimeFilter.DAILY -> getDayLabel(value.toInt())
+                        TimeFilter.WEEKLY -> getWeekLabel(value.toInt())
+                        TimeFilter.MONTHLY -> getMonthLabel(value.toInt())
+                    }
+                }
             }
 
             // Y-Axis styling
@@ -300,32 +300,33 @@ class StatsActivity : AppCompatActivity() {
         LinkedIn: $linkedinPercentage%
         Snapchat: $snapchatPercentage%
     """.trimIndent())
+        binding.instagramProgress.root.findViewById<ProgressBar>(R.id.progressBar)?.let { progressBar ->
+            binding.instagramProgress.root.findViewById<TextView>(R.id.platformName)?.text = "Instagram"
+            binding.instagramProgress.root.findViewById<TextView>(R.id.platformPercent)?.let { textView ->
+                updatePlatformProgress(progressBar, textView, instagramPercentage, lastStats.instagramReelsWatched)
+            }
+        }
 
-        // Update progress bars and text
-        updatePlatformProgress(
-            binding.instagramProgress,
-            binding.instagramPercent,
-            instagramPercentage,
-            lastStats.instagramReelsWatched
-        )
-        updatePlatformProgress(
-            binding.youtubeProgress,
-            binding.youtubePercent,
-            youtubePercentage,
-            lastStats.youtubeReelsWatched
-        )
-        updatePlatformProgress(
-            binding.linkedinProgress,
-            binding.linkedinPercent,
-            linkedinPercentage,
-            lastStats.linkedInVideosWatched
-        )
-        updatePlatformProgress(
-            binding.snapchatProgress,
-            binding.snapchatPercent,
-            snapchatPercentage,
-            lastStats.snapchatStoriesWatched
-        )
+        binding.youtubeProgress.root.findViewById<ProgressBar>(R.id.progressBar)?.let { progressBar ->
+            binding.youtubeProgress.root.findViewById<TextView>(R.id.platformName)?.text = "YouTube"
+            binding.youtubeProgress.root.findViewById<TextView>(R.id.platformPercent)?.let { textView ->
+                updatePlatformProgress(progressBar, textView, youtubePercentage, lastStats.youtubeReelsWatched)
+            }
+        }
+
+        binding.linkedinProgress.root.findViewById<ProgressBar>(R.id.progressBar)?.let { progressBar ->
+            binding.linkedinProgress.root.findViewById<TextView>(R.id.platformName)?.text = "LinkedIn"
+            binding.linkedinProgress.root.findViewById<TextView>(R.id.platformPercent)?.let { textView ->
+                updatePlatformProgress(progressBar, textView, linkedinPercentage, lastStats.linkedInVideosWatched)
+            }
+        }
+        binding.snapchatProgress.root.findViewById<ProgressBar>(R.id.progressBar)?.let { progressBar ->
+            binding.snapchatProgress.root.findViewById<TextView>(R.id.platformName)?.text = "Snapchat"
+            binding.snapchatProgress.root.findViewById<TextView>(R.id.platformPercent)?.let { textView ->
+                updatePlatformProgress(progressBar, textView, snapchatPercentage, lastStats.snapchatStoriesWatched)
+            }
+        }
+
     }
 
     private fun updatePlatformProgress(
@@ -481,9 +482,9 @@ class StatsActivity : AppCompatActivity() {
             setDrawValues(false)
             valueTextSize = 12f
             valueTextColor = getColor(R.color.colorPrimary)
-//            valueFormatter = IValueFormatter { value, _, _, _ ->
-//                value.toInt().toString()
-//            }
+            valueFormatter = IValueFormatter { value, _, _, _ ->
+                value.toInt().toString()
+            }
         }
 
         lineChart.apply {

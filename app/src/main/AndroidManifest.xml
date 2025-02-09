@@ -10,6 +10,9 @@
         <package android:name="com.google.android.youtube" />
         <package android:name="com.linkedin.android" />
         <package android:name="com.snapchat.android" />
+        <intent>
+        <action android:name="android.intent.action.SENDTO" />
+        <data android:scheme="mailto" /> </intent>
     </queries>
 
     <application
@@ -22,6 +25,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Testing"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.activity.WebViewActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false" />
         <activity
             android:name=".ui.activity.StatsActivity"
             android:exported="false" />

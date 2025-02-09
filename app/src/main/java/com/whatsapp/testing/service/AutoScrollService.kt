@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
+import com.whatsapp.testing.AppController.SharedPrefConst
 import com.whatsapp.testing.database.StatsDatabase
 import com.whatsapp.testing.database.StatsRepository
 import com.whatsapp.testing.ui.activity.HomeActivity
@@ -31,17 +32,11 @@ class AutoScrollService : AccessibilityService() {
 
     companion object {
         private const val TAG = "AutoScrollService"
-        private const val KEY_SKIP_ADS = "skip_ads"
-        private const val PREFS_NAME = "AutoScrollPrefs"
-        private const val KEY_REEL_LIMIT = "reelLimit"
-
 
         @JvmStatic
         var instance: AutoScrollService? = null
 
         @JvmStatic
-
-
 
         fun getCurrentInstance(): AutoScrollService? = instance
 
@@ -59,12 +54,14 @@ class AutoScrollService : AccessibilityService() {
             Log.e(TAG, "Error stopping service: ${e.message}")
         }
     }
+
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
         Log.d(TAG, "Service Connected - Initializing components")
 
     }
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -73,9 +70,12 @@ class AutoScrollService : AccessibilityService() {
         try {
             val dao = StatsDatabase.getDatabase(this).dailyStatsDao()
             statsRepository = StatsRepository(dao)
-            youTubeShortsHandler = YouTubeShortsHandler(this, statsRepository, serviceScope, currentScrollInterval)
-            linkedInHandler = LinkedInHandler(this, statsRepository, serviceScope, currentScrollInterval)
-            snapchatHandler = SnapchatHandler(this, statsRepository, serviceScope, currentScrollInterval)
+            youTubeShortsHandler =
+                YouTubeShortsHandler(this, statsRepository, serviceScope, currentScrollInterval)
+            linkedInHandler =
+                LinkedInHandler(this, statsRepository, serviceScope, currentScrollInterval)
+            snapchatHandler =
+                SnapchatHandler(this, statsRepository, serviceScope, currentScrollInterval)
             Log.d(TAG, "Service initialization completed successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Error initializing service: ${e.stackTraceToString()}")
@@ -86,7 +86,10 @@ class AutoScrollService : AccessibilityService() {
 
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        Log.d(TAG, "Accessibility Event Received: Type=${event.eventType}, Package=${event.packageName}")
+        Log.d(
+            TAG,
+            "Accessibility Event Received: Type=${event.eventType}, Package=${event.packageName}"
+        )
 
         when (event.packageName) {
             "com.instagram.android" -> {
@@ -95,30 +98,41 @@ class AutoScrollService : AccessibilityService() {
                     handleInstagramNavigation()
                 }
             }
+
             "com.google.android.youtube" -> {
                 if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                     Log.d(TAG, "Starting YouTube navigation handler")
                     youTubeShortsHandler.handleYouTubeNavigation()
                 } else {
-                    Log.d(TAG, "Received YouTube event but not window state change: ${event.eventType}")
+                    Log.d(
+                        TAG,
+                        "Received YouTube event but not window state change: ${event.eventType}"
+                    )
                 }
             }
+
             "com.linkedin.android" -> {
                 if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                     Log.d(TAG, "Starting LinkedIn navigation handler")
                     linkedInHandler.handleLinkedInNavigation()
                 }
-            }"com.snapchat.android" -> {
+            }
+
+            "com.snapchat.android" -> {
                 if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                     Log.d(TAG, "Starting Snapchat navigation handler")
                     snapchatHandler.handleSnapchatNavigation()
                 }
             }
+
             else -> {
-                Log.d(TAG, "Unhandled package: ${event.packageName}, Event type: ${event.eventType}")
+                Log.d(
+                    TAG, "Unhandled package: ${event.packageName}, Event type: ${event.eventType}"
+                )
             }
         }
     }
+
     private fun handleInstagramNavigation() {
         serviceScope.launch {
             try {
@@ -134,9 +148,9 @@ class AutoScrollService : AccessibilityService() {
                     // Log the screen hierarchy after loading
                     withContext(Dispatchers.Default) {
                         rootInActiveWindow?.let { newRoot ->
-                            Log.d(TAG, "=== Screen Hierarchy After Clicking Reels ===")
-                            logNodeHierarchy(newRoot, 0)
-                            Log.d(TAG, "=== End of Screen Hierarchy ===")
+//                            Log.d(TAG, "=== Screen Hierarchy After Clicking Reels ===")
+//                            logNodeHierarchy(newRoot, 0)
+//                            Log.d(TAG, "=== End of Screen Hierarchy ===")
 
                             // Initialize scrolling
                             initializeScrolling(newRoot)
@@ -151,29 +165,72 @@ class AutoScrollService : AccessibilityService() {
     }
 
 
+    //    private suspend fun initializeScrolling(rootNode: AccessibilityNodeInfo) {
+//        withContext(Dispatchers.IO) {
+//            val sharedPrefs = getSharedPreferences(SharedPrefConst.PREF_NAME, Context.MODE_PRIVATE)
+//            val scrollInterval = sharedPrefs.getLong(SharedPrefConst.KEY_SCROLL_INTERVAL, 5) * 1000
+//            val reelLimit = sharedPrefs.getLong(SharedPrefConst.KEY_REEL_LIMIT, 50)
+//            val skipAdsEnabled = sharedPrefs.getBoolean(SharedPrefConst.KEY_SKIP_ADS, false)
+//            currentScrollInterval = scrollInterval
+//            val todayStats = statsRepository.getTodayStats()
+//            if (todayStats.reelsWatched >= reelLimit) {
+//                Log.d(TAG, "Already at daily limit (${todayStats.reelsWatched}/$reelLimit)")
+//                withContext(Dispatchers.Main) {
+//                    Toast.makeText(
+//                        this@AutoScrollService,
+//                        "Daily reel limit reached!",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                }
+//                stopSelf()
+//                return@withContext
+//            }
+//
+//            while (isActive) {
+//                try {
+//                    // Get fresh root node for each check
+//                    val currentRoot = rootInActiveWindow
+//                    if (currentRoot == null) {
+//                        Log.e(TAG, "Root node is null")
+//                        delay(1000)
+//                        continue
+//                    }
+//
+//                    val isSponsored = checkForSponsoredReel(currentRoot)
+//
+//                    Log.d(
+//                        TAG,
+//                        "Checking reel - Skip Ads: $skipAdsEnabled, Is Sponsored: $isSponsored"
+//                    )
+//
+//                    if (skipAdsEnabled && isSponsored) {
+//                        Log.d(TAG, "Sponsored reel found - immediate scroll")
+//                        scrollReels(currentRoot)
+//                    } else {
+//                        Log.d(TAG, "Regular reel - scrolling with delay")
+//                        scrollReels(currentRoot)
+//                        delay(scrollInterval)
+//                    }
+//
+//                    // Small delay to ensure UI updates
+//                    delay(500)
+//
+//                } catch (e: Exception) {
+//                    Log.e(TAG, "Error in scroll cycle: ${e.message}")
+//                    delay(1000)
+//                }
+//            }
+//        }
+//    }
     private suspend fun initializeScrolling(rootNode: AccessibilityNodeInfo) {
         withContext(Dispatchers.IO) {
-            val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val sharedPrefs = getSharedPreferences(SharedPrefConst.PREF_NAME, Context.MODE_PRIVATE)
             val scrollInterval = sharedPrefs.getLong("scrollInterval", 5) * 1000
             val reelLimit = sharedPrefs.getLong("reelLimit", 50)
             currentScrollInterval = scrollInterval
-            val todayStats = statsRepository.getTodayStats()
-            if (todayStats.reelsWatched >= reelLimit) {
-                Log.d(TAG, "Already at daily limit (${todayStats.reelsWatched}/$reelLimit)")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@AutoScrollService,
-                        "Daily reel limit reached!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                stopSelf()
-                return@withContext
-            }
 
             while (isActive) {
                 try {
-                    // Get fresh root node for each check
                     val currentRoot = rootInActiveWindow
                     if (currentRoot == null) {
                         Log.e(TAG, "Root node is null")
@@ -181,25 +238,36 @@ class AutoScrollService : AccessibilityService() {
                         continue
                     }
 
-                    val skipAdsEnabled = sharedPrefs.getBoolean(KEY_SKIP_ADS, false)
-                    val isSponsored = checkForSponsoredReel(currentRoot)
+                    val skipAdsEnabled = sharedPrefs.getBoolean(SharedPrefConst.KEY_SKIP_ADS, false)
 
-                    Log.d(
-                        TAG,
-                        "Checking reel - Skip Ads: $skipAdsEnabled, Is Sponsored: $isSponsored"
-                    )
+                    if (skipAdsEnabled) {
+                        // For sponsored content
+                        val isSponsored = checkForSponsoredReel(currentRoot)
+                        if (isSponsored) {
+                            Log.d(TAG, "Sponsored reel found - immediate scroll")
+                            scrollReels(currentRoot)
+                            delay(1000)
+                            continue
+                        }
+                    }
 
-                    if (skipAdsEnabled && isSponsored) {
-                        Log.d(TAG, "Sponsored reel found - immediate scroll")
-                        scrollReels(currentRoot)
+                    // Regular content flow
+                    // Start pre-analysis 2 seconds before scroll
+                    val preAnalysisDelay = scrollInterval - 2000
+                    if (preAnalysisDelay > 0) {
+                        delay(preAnalysisDelay)
+
+                        // Pre-analyze next content
+                        Log.d(TAG, "Starting pre-analysis of next content")
+                        preAnalyzeNextContent(currentRoot)
+
+                        // Wait for remaining 2 seconds
+                        delay(2000)
                     } else {
-                        Log.d(TAG, "Regular reel - scrolling with delay")
-                        scrollReels(currentRoot)
                         delay(scrollInterval)
                     }
 
-                    // Small delay to ensure UI updates
-                    delay(500)
+                    scrollReels(currentRoot)
 
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in scroll cycle: ${e.message}")
@@ -209,13 +277,60 @@ class AutoScrollService : AccessibilityService() {
         }
     }
 
+    // Add new function for pre-analysis
+    private suspend fun preAnalyzeNextContent(node: AccessibilityNodeInfo) {
+        try {
+            val viewPager = findNodeByViewIdAndText(
+                node, "com.instagram.android:id/clips_viewer_view_pager", null
+            )
+
+            viewPager?.let { vp ->
+                // Try to find next content in RecyclerView
+                val recyclerView = findRecyclerViewInHierarchy(vp)
+                recyclerView?.let { rv ->
+                    // Log current view hierarchy for next content
+                    Log.d(TAG, "Pre-analyzing next content structure")
+                    logNodeHierarchy(rv, 0)
+
+                    // Check if next content is ready
+                    val isNextContentReady = checkNextContentReady(rv)
+                    if (!isNextContentReady) {
+                        Log.d(TAG, "Next content not fully loaded, adjusting scroll timing")
+                        delay(500) // Add small delay if content isn't ready
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error in pre-analysis: ${e.message}")
+        }
+    }
+
+    private fun checkNextContentReady(recyclerView: AccessibilityNodeInfo): Boolean {
+        try {
+            // Check for video container of next item
+            val nextVideoContainer = findNodeByViewIdAndText(
+                recyclerView, "com.instagram.android:id/clips_video_container", null
+            )
+
+            // Verify if video is loaded
+            nextVideoContainer?.let { container ->
+                val isLoaded =
+                    container.isVisibleToUser && container.isEnabled && !container.contentDescription.isNullOrEmpty()
+
+                Log.d(TAG, "Next content load status: $isLoaded")
+                return isLoaded
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking next content: ${e.message}")
+        }
+        return false
+    }
+
     private fun checkForSponsoredReel(node: AccessibilityNodeInfo): Boolean {
         try {
             // First find the video container
             val videoContainer = findNodeByViewIdAndText(
-                node,
-                "com.instagram.android:id/clips_video_container",
-                null
+                node, "com.instagram.android:id/clips_video_container", null
             )
 
             videoContainer?.let { container ->
@@ -278,18 +393,18 @@ class AutoScrollService : AccessibilityService() {
 
     private suspend fun scrollReels(node: AccessibilityNodeInfo) {
         try {
-            val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val reelLimit = sharedPrefs.getLong(KEY_REEL_LIMIT, 50)
+            val sharedPrefs = getSharedPreferences(SharedPrefConst.PREF_NAME, Context.MODE_PRIVATE)
+            val reelLimit = sharedPrefs.getLong(SharedPrefConst.KEY_REEL_LIMIT, 50)
+            val skipAdsEnabled = sharedPrefs.getBoolean(SharedPrefConst.KEY_SKIP_ADS, false)
             val todayStats = statsRepository.getTodayStats()
 
             // Check if limit reached
             if (todayStats.reelsWatched >= reelLimit) {
                 Log.d(TAG, "Daily limit reached: ${todayStats.reelsWatched}/$reelLimit reels")
                 withContext(Dispatchers.Main) {
+
                     Toast.makeText(
-                        this@AutoScrollService,
-                        "Daily reel limit reached!",
-                        Toast.LENGTH_LONG
+                        this@AutoScrollService, "Daily reel limit reached!", Toast.LENGTH_LONG
                     ).show()
                 }
                 stopSelf()
@@ -326,7 +441,6 @@ class AutoScrollService : AccessibilityService() {
                 }
 
                 if (scrollSuccessful) {
-                    val skipAdsEnabled = sharedPrefs.getBoolean(KEY_SKIP_ADS, false)
 
                     // Only count as ad skipped if the feature is enabled
                     val adSkipped = isSponsored && skipAdsEnabled
@@ -364,11 +478,13 @@ class AutoScrollService : AccessibilityService() {
             Log.e(TAG, "Error scrolling reels: ${e.message}")
         }
     }
+
     private fun navigateToMainActivity() {
         val intent = Intent(this, HomeActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
     }
+
     private fun findRecyclerViewInHierarchy(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
         if (node.className == "androidx.recyclerview.widget.RecyclerView") {
             return node

@@ -5,6 +5,7 @@ import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.util.Log
 import android.view.accessibility.AccessibilityNodeInfo
+import com.whatsapp.testing.AppController.SharedPrefConst
 import com.whatsapp.testing.database.StatsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -18,10 +19,6 @@ class LinkedInHandler(
 ) {
     companion object {
         private const val TAG = "LinkedInHandler"
-        private const val PREFS_NAME = "AutoScrollPrefs"
-        private const val KEY_SKIP_ADS = "skip_ads"
-        private const val KEY_REEL_LIMIT = "reelLimit"
-        private const val LINKEDIN_PACKAGE = "com.linkedin.android"
     }
 
     fun  handleLinkedInNavigation() {
@@ -69,8 +66,8 @@ class LinkedInHandler(
                     }
 
                     // Check if we should skip this video (if it's sponsored and skip_ads is enabled)
-                    val skipAds = service.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                        .getBoolean(KEY_SKIP_ADS, false)
+                    val skipAds = service.getSharedPreferences(SharedPrefConst.PREF_NAME, Context.MODE_PRIVATE)
+                        .getBoolean(SharedPrefConst.KEY_SKIP_ADS, false)
                     val isSponsored = if (skipAds) checkForSponsoredContent(currentRoot) else false
 
                     if (skipAds && isSponsored) {
@@ -85,8 +82,8 @@ class LinkedInHandler(
 
                     // Optional: Check if we've reached our daily limit
                     val todayStats = statsRepository.getTodayStats()
-                    val reelLimit = service.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                        .getLong(KEY_REEL_LIMIT, 50)
+                    val reelLimit = service.getSharedPreferences(SharedPrefConst.PREF_NAME, Context.MODE_PRIVATE)
+                        .getLong(SharedPrefConst.KEY_REEL_LIMIT, 50)
 
                     if (todayStats.linkedInVideosWatched >= reelLimit) {
                         Log.d(TAG, "Daily limit reached, stopping service")

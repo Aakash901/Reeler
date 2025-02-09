@@ -88,28 +88,28 @@ class PolarChartFragment : BaseChartFragment() {
         // Platform Spinner
         val platformAdapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.dropdown_item,
             platforms
         )
-        platformAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        platformAdapter.setDropDownViewResource(R.layout.dropdown_item)
         platformSpinner.adapter = platformAdapter
 
         // Metric Spinner
         val metricAdapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.dropdown_item,
             metrics
         )
-        metricAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        metricAdapter.setDropDownViewResource(R.layout.dropdown_item)
         metricSpinner.adapter = metricAdapter
 
         // Time Spinner
         val timesAdapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            R.layout.dropdown_item,
             timesSpinList
         )
-        timesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        timesAdapter.setDropDownViewResource(R.layout.dropdown_item)
         timesSpinner.adapter = timesAdapter
 
         // Add spinner listeners

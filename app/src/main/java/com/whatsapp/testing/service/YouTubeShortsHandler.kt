@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
+import com.whatsapp.testing.AppController.SharedPrefConst
 import com.whatsapp.testing.database.StatsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,9 +22,6 @@ class YouTubeShortsHandler(
 ) {
     companion object {
         private const val TAG = "AutoScrollService"
-        private const val PREFS_NAME = "AutoScrollPrefs"
-        private const val KEY_SKIP_ADS = "skip_ads"
-        private const val KEY_REEL_LIMIT = "reelLimit"
     }
 
     fun handleYouTubeNavigation() {
@@ -208,9 +206,9 @@ class YouTubeShortsHandler(
 
     private suspend fun initializeScrolling(rootNode: AccessibilityNodeInfo) {
         withContext(Dispatchers.IO) {
-            val sharedPrefs = service.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val sharedPrefs = service.getSharedPreferences(SharedPrefConst.PREF_NAME, Context.MODE_PRIVATE)
             val scrollInterval = sharedPrefs.getLong("scrollInterval", 5) * 1000
-            val reelLimit = sharedPrefs.getLong(KEY_REEL_LIMIT, 50)
+            val reelLimit = sharedPrefs.getLong(SharedPrefConst.KEY_REEL_LIMIT, 50)
             val todayStats = statsRepository.getTodayStats()
 
             if (todayStats.youtubeReelsWatched + todayStats.instagramReelsWatched >= reelLimit) {
@@ -230,7 +228,7 @@ class YouTubeShortsHandler(
                         delay(1000)
                         continue
                     }
-                    val skipAdsEnabled = sharedPrefs.getBoolean(KEY_SKIP_ADS, false)
+                    val skipAdsEnabled = sharedPrefs.getBoolean(SharedPrefConst.KEY_SKIP_ADS, false)
                     val isSponsored = checkForSponsoredReel(currentRoot)
 
                     Log.d(

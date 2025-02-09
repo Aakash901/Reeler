@@ -71,36 +71,33 @@
     <!-- Background overlay -->
     <color name="surface_overlay">#1AFFFFFF</color>
     <color name="text_light_black">#757575</color>
-
-    //settings
-    <!-- Settings Colors - Light Theme -->
-    <color name="settings_background">#FFFFFF</color>
-    <color name="settings_text_primary">#000000</color>
-    <color name="settings_card_background">#FFFFFF</color>
-    <color name="settings_icon_tint">#000000</color>
-    <color name="settings_divider">#FFEEEEEE</color>
-    <color name="settings_toolbar_background">#FFFFFF</color>
-    <color name="settings_switch_track_color">#FF4B6C</color>
-    <color name="settings_ripple_color">#1F000000</color>
-    <!-- Home Colors - Light Theme (values/colors.xml) -->
-    <color name="home_background">#F8F9FA</color>
-    <color name="home_card_background">#FFFFFF</color>
-    <color name="home_text_primary">@color/black</color>
+    <!-- Settings Colors - Dark Theme -->
+    <color name="settings_background">#121212</color>
+    <color name="settings_text_primary">#FFFFFF</color>
+    <color name="settings_card_background">#1E1E1E</color>
+    <color name="settings_icon_tint">#FFFFFF</color>
+    <color name="settings_divider">#424242</color>
+    <color name="settings_toolbar_background">#1E1E1E</color>
+    <color name="settings_switch_track_color">#FF6B8C</color>
+    <color name="settings_ripple_color">#33FFFFFF</color>
+    <!-- Home Colors - Dark Theme (values-night/colors.xml) -->
+    <color name="home_background">#121212</color>
+    <color name="home_card_background">#1E1E1E</color>
+    <color name="home_text_primary">@color/white</color>
     <color name="home_text_accent">#FF8959</color>
-    <color name="home_text_secondary">#757575</color>
-    <color name="home_card_secondary_bg">#F8F9FA</color>
-    <color name="home_input_background">@color/white</color>
-    <color name="home_button_stop">#FF4B6C</color>
-    <color name="home_button_start">#FFB344</color>
-    <color name="home_dots_selected">#FF4B6C</color>
-    <color name="home_dots_unselected">#FFB344</color>
-    <!-- Pie Chart Colors - Light Theme (values/colors.xml) -->
-    <color name="chart_background">#F8F9FA</color>
-    <color name="chart_title_text">@color/black</color>
-    <color name="chart_card_background">#1A000000</color> <!-- 10% black -->
-    <color name="chart_card_stroke">#26000000</color> <!-- 15% black -->
-    <color name="chart_spinner_background">#26000000</color> <!-- 15% black -->
-    <color name="chart_spinner_popup">@color/white</color>
-    <color name="chart_spinner_text">@color/black</color>
-
+    <color name="home_text_secondary">#B0BEC5</color>
+    <color name="home_card_secondary_bg">#242424</color>
+    <color name="home_input_background">#242424</color>
+    <color name="home_button_stop">#FF6B8C</color>
+    <color name="home_button_start">#FFD064</color>
+    <color name="home_dots_selected">#FF6B8C</color>
+    <color name="home_dots_unselected">#FFD064</color>
+    <!-- Pie Chart Colors - Dark Theme (values-night/colors.xml) -->
+    <color name="chart_background">#121212</color>
+    <color name="chart_title_text">@color/white</color>
+    <color name="chart_card_background">#1AFFFFFF</color> <!-- 10% white -->
+    <color name="chart_card_stroke">#26FFFFFF</color> <!-- 15% white -->
+    <color name="chart_spinner_background">#26FFFFFF</color> <!-- 15% white -->
+    <color name="chart_spinner_popup">#1E1E1E</color>
+    <color name="chart_spinner_text">@color/white</color>
 </resources>

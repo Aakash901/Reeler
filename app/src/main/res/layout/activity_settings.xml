@@ -4,14 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/settings_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="0"
-        android:background="@color/white"
+        android:background="@color/settings_toolbar_background"
         android:elevation="0dp"
         android:stateListAnimator="@null"
         android:translationY="-100dp"
@@ -28,14 +29,14 @@
                 android:layout_height="24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/arrow_left"
-                app:tint="#000000" />
+                app:tint="@color/settings_icon_tint" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:text="Advanced Setting"
-                android:textColor="@color/black"
+                android:textColor="@color/settings_text_primary"
                 android:textSize="20sp" />
 
         </androidx.appcompat.widget.Toolbar>
@@ -50,6 +51,7 @@
         android:layout_margin="16dp"
         android:alpha="0"
         android:translationX="-100dp"
+        app:cardBackgroundColor="@color/settings_card_background"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout">
@@ -73,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="Skip Sponsored Contents"
-                    android:textColor="@color/black"
+                    android:textColor="@color/settings_text_primary"
                     android:textSize="16sp" />
 
                 <com.github.iielse.switchbutton.SwitchView
@@ -85,7 +87,7 @@
 
             </RelativeLayout>
 
-            <!-- Automatic Reply -->
+            <!-- Automatic Scroll -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,8 +98,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="Automatic Reply"
-                    android:textColor="@color/black"
+                    android:text="Automatic Scroll"
+                    android:textColor="@color/settings_text_primary"
                     android:textSize="16sp" />
 
                 <com.github.iielse.switchbutton.SwitchView
@@ -121,6 +123,7 @@
         android:layout_margin="16dp"
         android:alpha="0"
         android:translationX="100dp"
+        app:cardBackgroundColor="@color/settings_card_background"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:layout_constraintTop_toBottomOf="@id/settingsCard">
@@ -136,13 +139,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="More"
-                android:textColor="@color/black"
+                android:textColor="@color/settings_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <!-- Share -->
             <LinearLayout
                 android:id="@+id/shareLayout"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -154,13 +158,13 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_share"
-                    app:tint="@color/black" />
+                    app:tint="@color/settings_icon_tint" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Share"
-                    android:textColor="@color/black"
+                    android:textColor="@color/settings_text_primary"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -170,6 +174,7 @@
                 android:id="@+id/rateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:padding="12dp">
@@ -179,13 +184,13 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_rate"
-                    app:tint="@color/black" />
+                    app:tint="@color/settings_icon_tint" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Rate Us"
-                    android:textColor="@color/black"
+                    android:textColor="@color/settings_text_primary"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -204,13 +209,13 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_contact"
-                    app:tint="@color/black" />
+                    app:tint="@color/settings_icon_tint" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Contact Us"
-                    android:textColor="@color/black"
+                    android:textColor="@color/settings_text_primary"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -229,13 +234,13 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_follow"
-                    app:tint="@color/black" />
+                    app:tint="@color/settings_icon_tint" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Follow Us"
-                    android:textColor="@color/black"
+                    android:textColor="@color/settings_text_primary"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -254,13 +259,13 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_privacy"
-                    app:tint="@color/black" />
+                    app:tint="@color/settings_icon_tint" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Privacy Policy"
-                    android:textColor="@color/black"
+                    android:textColor="@color/settings_text_primary"
                     android:textSize="16sp" />
 
             </LinearLayout>

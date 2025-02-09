@@ -15,6 +15,12 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="ChartSpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:textColor">@color/chart_spinner_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+    </style>
 
     <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/gradient_end</item>
@@ -55,4 +61,7 @@
         <item name="backgroundTint">@color/gradient_start</item>
         <item name="cornerRadius">12dp</item>
     </style>
+
+
+
 </resources>

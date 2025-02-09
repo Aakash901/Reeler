@@ -9,4 +9,11 @@ object SharedPrefConst {
     const val KEY_SCROLL_INTERVAL = "scrollInterval"
     const val KEY_REEL_LIMIT = "reelLimit"
     const val KEY_SELECTED_APP = "selected_app"
+
+    //platform name
+
+    const val INSTAGRAM_APP = "instagram"
+    const val LINKEDIN_APP = "linkedin"
+    const val YOUTUBE_APP = "youtube"
+    const val SNAPCHAT_APP = "snapchat"
 }

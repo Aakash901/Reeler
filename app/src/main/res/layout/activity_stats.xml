@@ -4,20 +4,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey">
+    android:background="@color/background_light">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@drawable/gradient_background">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/arrow_left"
+            app:navigationIconTint="@color/black"
             app:title="Statistics"
-            app:titleTextColor="@color/colorPrimary"/>
+            app:titleTextColor="@color/white"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -25,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:overScrollMode="never"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -38,20 +41,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/timeFilterTabs"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    app:tabMode="fixed"
+                    android:background="@color/white"
                     app:tabGravity="fill"
-                    app:tabTextColor="@color/darkerGrey"
-                    app:tabSelectedTextColor="@color/teal_200"
-                    app:tabIndicatorColor="@color/teal_200"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@color/gradient_start"
+                    app:tabIndicatorColor="@color/gradient_start"
                     app:tabIndicatorHeight="3dp"
-                    app:tabBackground="@android:color/transparent"/>
+                    app:tabTextColor="@color/text_secondary"/>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -60,7 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                android:overScrollMode="never">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/platformChipGroup"
@@ -71,41 +76,6 @@
                     app:chipSpacing="8dp"/>
 
             </HorizontalScrollView>
-
-            <!-- Chart Type Toggle -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="4dp">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/lineChartButton"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Line Chart"
-                        android:textColor="@color/teal_200"
-                        app:cornerRadius="8dp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/barChartButton"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bar Chart"
-                        android:textColor="@color/darkerGrey"
-                        app:cornerRadius="8dp"/>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
             <!-- Stats Summary Cards -->
             <LinearLayout
@@ -120,8 +90,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -134,24 +105,23 @@
                             android:layout_height="wrap_content"
                             android:text="Total Content"
                             android:textSize="14sp"
-                            android:textColor="@color/darkerGrey"/>
+                            android:textColor="@color/text_secondary"/>
 
                         <TextView
                             android:id="@+id/totalContentValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="8dp"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="@color/colorPrimary"/>
+                            android:textColor="@color/gradient_start"/>
 
                         <TextView
                             android:id="@+id/totalContentTrend"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textSize="12sp"
-                            android:textColor="@color/darkGreen"/>
+                            android:textSize="12sp"/>
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -162,8 +132,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -176,36 +147,72 @@
                             android:layout_height="wrap_content"
                             android:text="Time Saved"
                             android:textSize="14sp"
-                            android:textColor="@color/darkerGrey"/>
+                            android:textColor="@color/text_secondary"/>
 
                         <TextView
                             android:id="@+id/timeSavedValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_marginTop="8dp"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="@color/colorPrimary"/>
+                            android:textColor="@color/gradient_start"/>
 
                         <TextView
                             android:id="@+id/timeSavedTrend"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textSize="12sp"
-                            android:textColor="@color/darkGreen"/>
+                            android:textSize="12sp"/>
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Main Chart Container -->
+            <!-- Chart Type Toggle -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/lineChartButton"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Line Chart"
+                        android:textColor="@color/gradient_start"
+                        app:cornerRadius="20dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/barChartButton"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bar Chart"
+                        android:textColor="@color/text_secondary"
+                        app:cornerRadius="20dp"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Main Chart -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/mainChart"
@@ -220,8 +227,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -235,155 +243,36 @@
                         android:text="Platform Distribution"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/gradient_start"
                         android:layout_marginBottom="16dp"/>
 
-                    <!-- Instagram Progress -->
-                    <LinearLayout
+                    <!-- Platform Progress Bars -->
+                    <!-- Instagram -->
+                    <include layout="@layout/item_platform_progress"
+                        android:id="@+id/instagramProgress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="12dp">
+                        android:layout_marginBottom="16dp"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Instagram"
-                                android:textColor="@color/colorPrimary"/>
-
-                            <TextView
-                                android:id="@+id/instagramPercent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/colorPrimary"/>
-
-                        </LinearLayout>
-
-                        <ProgressBar
-                            android:id="@+id/instagramProgress"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:progressTint="@color/red"
-                            android:layout_marginTop="4dp"/>
-
-                    </LinearLayout>
-
-                    <!-- YouTube Progress -->
-                    <LinearLayout
+                    <!-- YouTube -->
+                    <include layout="@layout/item_platform_progress"
+                        android:id="@+id/youtubeProgress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="12dp">
+                        android:layout_marginBottom="16dp"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="YouTube"
-                                android:textColor="@color/colorPrimary"/>
-
-                            <TextView
-                                android:id="@+id/youtubePercent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/colorPrimary"/>
-
-                        </LinearLayout>
-
-                        <ProgressBar
-                            android:id="@+id/youtubeProgress"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:progressTint="@color/red"
-                            android:layout_marginTop="4dp"/>
-
-                    </LinearLayout>
-
-                    <!-- LinkedIn Progress -->
-                    <LinearLayout
+                    <!-- LinkedIn -->
+                    <include layout="@layout/item_platform_progress"
+                        android:id="@+id/linkedinProgress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="12dp">
+                        android:layout_marginBottom="16dp"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="LinkedIn"
-                                android:textColor="@color/colorPrimary"/>
-
-                            <TextView
-                                android:id="@+id/linkedinPercent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/colorPrimary"/>
-
-                        </LinearLayout>
-
-                        <ProgressBar
-                            android:id="@+id/linkedinProgress"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:progressTint="@color/lightBlue"
-                            android:layout_marginTop="4dp"/>
-
-                    </LinearLayout>
-
-                    <!-- Snapchat Progress -->
-                    <LinearLayout
+                    <!-- Snapchat -->
+                    <include layout="@layout/item_platform_progress"
+                        android:id="@+id/snapchatProgress"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Snapchat"
-                                android:textColor="@color/colorPrimary"/>
-
-                            <TextView
-                                android:id="@+id/snapchatPercent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/colorPrimary"/>
-
-                        </LinearLayout>
-
-                        <ProgressBar
-                            android:id="@+id/snapchatProgress"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:progressTint="@color/yellow"
-                            android:layout_marginTop="4dp"/>
-
-                    </LinearLayout>
+                        android:layout_height="wrap_content"/>
 
                 </LinearLayout>
 

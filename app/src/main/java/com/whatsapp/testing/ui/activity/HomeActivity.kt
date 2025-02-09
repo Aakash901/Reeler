@@ -29,6 +29,7 @@ import com.whatsapp.testing.service.AutoScrollService
 import com.whatsapp.testing.ui.activity.adapter.StatsChartPagerAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
@@ -40,6 +41,7 @@ class HomeActivity : AppCompatActivity() {
     private var statsUpdateJob: Job? = null
     private var isInForeground = false
     private lateinit var statsChartPagerAdapter: StatsChartPagerAdapter
+    private var saveJob: Job? = null
 
     private val apps = listOf(
         "Instagram Reels", "YouTube Shorts", "LinkedIn Videos", "Snapchat Stories"
@@ -116,7 +118,11 @@ class HomeActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                saveSettings()
+                saveJob?.cancel()
+                saveJob = lifecycleScope.launch {
+                    delay(500) // Debounce for 500ms
+                    saveSettings()
+                }
             }
         }
 
@@ -164,10 +170,18 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun loadSavedSettings() {
-        with(binding) {
-            editTextInterval.setText(prefManager.getScrollInterval().toString())
-            editTextReelLimit.setText(prefManager.getReelLimit().toString())
-            skipAdsSwitch.setOpened(prefManager.getSkipAds())
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val interval = prefManager.getScrollInterval()
+                val reelLimit = prefManager.getReelLimit()
+                val skipAds = prefManager.getSkipAds()
+
+                withContext(Dispatchers.Main) {
+                    binding.editTextInterval.setText(interval.toString())
+                    binding.editTextReelLimit.setText(reelLimit.toString())
+                    binding.skipAdsSwitch.setOpened(skipAds)
+                }
+            }
         }
     }
 
@@ -204,7 +218,7 @@ class HomeActivity : AppCompatActivity() {
                     // Show stats
                     binding.emptyState.root.visibility = View.GONE
                     binding.statsHeading.visibility = View.VISIBLE
-                    binding.fullGraph.visibility = View.VISIBLE
+//                    binding.fullGraph.visibility = View.VISIBLE
                     binding.statsViewPager.visibility = View.VISIBLE
                     binding.dotsIndicator.visibility = View.VISIBLE
                     statsChartPagerAdapter.updateAllFragmentsStats(allStats)
@@ -236,39 +250,104 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun saveSettings() {
-        val interval = binding.editTextInterval.text.toString().toLongOrNull()
-        val reelLimit = binding.editTextReelLimit.text.toString().toLongOrNull()
+        try {
+            val intervalText = binding.editTextInterval.text.toString()
+            val reelLimitText = binding.editTextReelLimit.text.toString()
 
-        when {
-            interval == null || interval < 3 -> {
-                showToast("Scroll interval must be at least 3 seconds")
+            // Validation messages
+            var hasError = false
+            val errorMessages = mutableListOf<String>()
+
+            // Validate interval
+            val interval = intervalText.toLongOrNull()
+            if (intervalText.isNotEmpty() && (interval == null || !prefManager.isValidInterval(
+                    interval
+                ))
+            ) {
+                errorMessages.add("Scroll interval must be at least ${PreferenceManager.MIN_INTERVAL} seconds")
+                hasError = true
+            }
+
+            // Validate reel limit
+            val reelLimit = reelLimitText.toLongOrNull()
+            if (reelLimitText.isNotEmpty() && (reelLimit == null || !prefManager.isValidReelLimit(
+                    reelLimit
+                ))
+            ) {
+                errorMessages.add("Reel limit must be between ${PreferenceManager.MIN_REEL_LIMIT} and ${PreferenceManager.MAX_REEL_LIMIT}")
+                hasError = true
+            }
+
+            // If there are validation errors, show them
+            if (hasError) {
+                errorMessages.forEach { showToast(it) }
                 return
             }
 
-            reelLimit == null || reelLimit < 5 || reelLimit > 5000 -> {
-                showToast("Reel limit must be between 5 and 5,000")
-                return
-            }
-
-            else -> {
-                prefManager.apply {
-                    saveScrollInterval(interval)
-                    saveReelLimit(reelLimit)
+            // Save valid values
+            var settingsUpdated = false
+            if (interval != null && intervalText.isNotEmpty()) {
+                if (prefManager.saveScrollInterval(interval)) {
+                    settingsUpdated = true
                 }
+            }
+            if (reelLimit != null && reelLimitText.isNotEmpty()) {
+                if (prefManager.saveReelLimit(reelLimit)) {
+                    settingsUpdated = true
+                }
+            }
+
+            // Show success message only if something was actually updated
+            if (settingsUpdated) {
                 showToast("Settings saved successfully")
             }
+
+        } catch (e: Exception) {
+            Log.e("HomeActivity", "Error saving settings: ${e.message}")
+            showToast("Error saving settings")
         }
     }
 
+
     private fun startService() {
+        // First check if app is selected
         if (!validateAppSelection()) return
 
+        // Then validate all settings
+        if (!prefManager.areSettingsValid()) {
+            // Show all validation errors
+            prefManager.getSettingsValidationErrors().forEach { error ->
+                showToast(error)
+            }
+            return
+        }
+
+        // Check accessibility service
         if (isAccessibilityServiceEnabled()) {
-            when (binding.appSelector.text.toString()) {
-                "Instagram Reels" -> openApp("com.instagram.android", "Instagram")
-                "YouTube Shorts" -> openApp("com.google.android.youtube", "YouTube")
-                "Snapchat Stories" -> openApp("com.snapchat.android", "Snapchat")
-                "LinkedIn Videos" -> openApp("com.linkedin.android", "LinkedIn")
+            // Validate saved settings one final time
+            val interval = prefManager.getScrollInterval()
+            val reelLimit = prefManager.getReelLimit()
+
+            when {
+                interval < PreferenceManager.MIN_INTERVAL -> {
+                    showToast("Invalid scroll interval. Please update settings.")
+                    return
+                }
+
+                reelLimit !in PreferenceManager.MIN_REEL_LIMIT..PreferenceManager.MAX_REEL_LIMIT -> {
+                    showToast("Invalid reel limit. Please update settings.")
+                    return
+                }
+
+                else -> {
+                    // All validations passed, start the service
+                    when (binding.appSelector.text.toString()) {
+                        "Instagram Reels" -> openApp("com.instagram.android", "Instagram")
+                        "YouTube Shorts" -> openApp("com.google.android.youtube", "YouTube")
+                        "Snapchat Stories" -> openApp("com.snapchat.android", "Snapchat")
+                        "LinkedIn Videos" -> openApp("com.linkedin.android", "LinkedIn")
+                    }
+                }
             }
         } else {
             requestAccessibilityPermission()
@@ -303,8 +382,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun requestAccessibilityPermission() {
         startActivityForResult(
-            Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS),
-            100
+            Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS), 100
         )
     }
 

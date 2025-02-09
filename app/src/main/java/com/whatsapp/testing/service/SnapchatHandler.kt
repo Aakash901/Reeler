@@ -23,9 +23,6 @@ class SnapchatHandler(
 ) {
     companion object {
         private const val TAG = "SnapchatHandler"
-        private const val PREFS_NAME = "AutoScrollPrefs"
-        private const val KEY_SKIP_ADS = "skip_ads"
-        private const val KEY_REEL_LIMIT = "reelLimit"
         private const val SNAPCHAT_PACKAGE = "com.snapchat.android"
         private const val SCROLL_DURATION = 300L
         private const val INITIAL_DELAY = 3000L
