@@ -56,12 +56,10 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
     testImplementation("androidx.room:room-testing:2.6.1")
 
-
     //toggle btn dependency
     implementation("com.github.iielse:switchbutton:1.0.4")
     implementation("com.tbuonomo:dotsindicator:4.3")
-    implementation("com.github.PhilJay:MPAndroidChart:v3.0.3")
-    implementation ("com.github.AAChartModel:AAChartCore-Kotlin:-SNAPSHOT")
-
+    implementation("com.github.PhilJay:MPAndroidChart:v3.0.3") // Updated version
+    implementation("com.github.AAChartModel:AAChartCore-Kotlin:7.3.0")
 
 }
