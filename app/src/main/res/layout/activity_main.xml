@@ -206,7 +206,7 @@
                                 android:layout_centerVertical="true" />
                         </RelativeLayout>
                     </com.google.android.material.card.MaterialCardView>
-
+                    <!-- Replace this section in your layout file -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -232,6 +232,24 @@
                             app:iconTint="@color/white" />
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSaveSettings"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_marginEnd="16dp"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="0dp"
+                            app:backgroundTint="@color/home_text_accent"
+                            app:cornerRadius="28dp"
+                            app:icon="@drawable/ic_save"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0dp"
+                            app:iconSize="24dp"
+                            app:iconTint="@color/white" />
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnStartService"
                             android:layout_width="56dp"
                             android:layout_height="56dp"
@@ -248,7 +266,6 @@
                             app:iconPadding="0dp"
                             app:iconSize="24dp"
                             app:iconTint="@color/white" />
-
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

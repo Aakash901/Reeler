@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.whatsapp.testing"
+    namespace = "com.reeler.app"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.whatsapp.testing"
+        applicationId = "com.reeler.app"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
