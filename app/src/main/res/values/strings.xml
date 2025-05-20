@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Reeler</string>
-    <string name="percentage_format">Reel scroller</string>
-    <string name="accessbility_desc">This permission is necessary for handling the instagram by this app</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-</resources>
